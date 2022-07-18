@@ -10,7 +10,7 @@ function Login() {
   }
 
   return (
-    <Layout isCentered={true}>
+    <Layout isCentered={true} hasLogo={true}>
       <Box
         display='flex'
         justifyContent='center'
