@@ -1,5 +1,6 @@
 import { Box, Button, Checkbox, Input, Text } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import { string } from 'yup'
 import { useUser } from '../contexts/UserContext'
 import Layout from '../components/Layout'
@@ -8,6 +9,8 @@ function Login() {
   const [name, setName] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
   const [isChecked, setIsChecked] = useState<boolean>(false)
+
+  const navigate = useNavigate()
 
   const nameSchema = string()
     .matches(/^[aA-zZ ]*$/)
@@ -32,6 +35,12 @@ function Login() {
 
   const handleConfirmAge = () => {
     setIsChecked(prevState => !prevState)
+  }
+
+  const handleLogin = () => {
+    handleUser(name)
+
+    navigate('/brewery')
   }
 
   return (
@@ -75,7 +84,7 @@ function Login() {
           backgroundColor='#5D5FEF'
           color='white'
           isDisabled={!isChecked || error}
-          onClick={() => handleUser(name)}
+          onClick={handleLogin}
         >
           Enter
         </Button>
