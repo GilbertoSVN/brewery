@@ -1,12 +1,15 @@
 import { UserProvider } from './contexts/UserContext'
-import Login from './pages/Login'
+import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from './routes'
 
 function App() {
   return (
     <div className='App'>
-      <UserProvider>
-        <Login />
-      </UserProvider>
+      <BrowserRouter>
+        <UserProvider>
+          <AppRoutes />
+        </UserProvider>
+      </BrowserRouter>
     </div>
   )
 }
