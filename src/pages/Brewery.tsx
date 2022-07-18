@@ -51,7 +51,6 @@ function Brewery() {
   }
 
   const breweriesList: BreweryType[] = useMemo(() => {
-    console.log('updated')
     return processData(breweries || [])
   }, [breweries])
 
