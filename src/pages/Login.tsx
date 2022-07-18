@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Input, Text } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import { string } from 'yup'
 import { useUser } from '../contexts/UserContext'
 import Layout from '../components/Layout'
@@ -34,7 +34,7 @@ function Login() {
   }
 
   const handleConfirmAge = () => {
-    setIsChecked(prevState => !prevState)
+    setIsChecked((prevState) => !prevState)
   }
 
   const handleLogin = () => {
