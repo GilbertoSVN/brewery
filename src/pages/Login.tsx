@@ -2,10 +2,13 @@ import { Box, Button, Checkbox, Input, Text } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
 import { string } from 'yup'
 import Layout from '../components/Layout'
+import { useUser } from '../contexts/UserContext'
 
 function Login() {
   const [name, setName] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
+
+  const { handleUser } = useUser()
 
   const nameSchema = string()
     .matches(/^[aA-zZ ]*$/)
@@ -65,6 +68,7 @@ function Login() {
           backgroundColor='#5D5FEF'
           color='white'
           isDisabled={error}
+          onClick={() => handleUser(name)}
         >
           Enter
         </Button>

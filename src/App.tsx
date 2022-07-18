@@ -1,9 +1,12 @@
+import { UserProvider } from './contexts/UserContext'
 import Login from './pages/Login'
 
 function App() {
   return (
     <div className='App'>
-      <Login />
+      <UserProvider>
+        <Login />
+      </UserProvider>
     </div>
   )
 }
