@@ -1,69 +1,59 @@
-import { useEffect, useState } from 'react'
-import { Box, Flex, Spinner } from '@chakra-ui/react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Box, Flex, Grid, Spinner } from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import Header from '../components/Header'
-
-type Brewery = {
-  id: string
-  name: string
-  street?: string
-  city: string
-  state: string
-  country: string
-  postalCode: string
-  phone: string
-  type: string
-  custom: string
-}
-
-interface BreweryResponse {
-  id: string
-  name: string
-  brewery_type?: string
-  street?: null
-  address_2?: null
-  address_3?: null
-  city?: string
-  state?: string
-  county_province?: null
-  postal_code?: string
-  country?: string
-  longitude?: null
-  latitude?: null
-  phone?: string
-  website_url?: string
-  updated_at?: string
-  created_at?: string
-}
+import BreweryResponse from '../interfaces/BreweryResponse'
+import BreweryType from '../types/Brewery'
+import Card from '../components/Card'
 
 function Brewery() {
-  const [breweries, setBreweries] = useState<Brewery[]>()
+  const [breweries, setBreweries] = useState<BreweryResponse[]>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  function processData<T>(data: BreweryResponse[]): T[] {
+    const processedData: T[] = []
+
+    data.forEach((brewery) => {
+      const processed = {
+        id: brewery.id,
+        name: brewery.name,
+        street: brewery.street || '',
+        city: brewery.city || '',
+        state: brewery.state || '',
+        country: brewery.country || '',
+        postalCode: brewery.postal_code || '',
+        phone: brewery.phone || '',
+        type: brewery.brewery_type || '',
+        custom: '',
+      }
+      processedData.push(processed as T)
+    })
+
+    return processedData
+  }
 
   useEffect(() => {
     fetch('https://api.openbrewerydb.org/breweries')
       .then((response) => response.json())
       .then((breweries: BreweryResponse[]) => {
-        const processedData: Brewery[] = []
-        breweries.forEach((brewery) => {
-          const data = {
-            id: brewery.id,
-            name: brewery.name,
-            street: brewery.street || '',
-            city: brewery.city || '',
-            state: brewery.state || '',
-            country: brewery.country || '',
-            postalCode: brewery.postal_code || '',
-            phone: brewery.phone || '',
-            type: brewery.brewery_type || '',
-            custom: '',
-          }
-          processedData.push(data)
-        })
-        setBreweries(processedData)
+        setBreweries(breweries)
       })
       .finally(() => setIsLoading(false))
   }, [])
+
+  const deleteBrewery = (index: number) => {
+    setBreweries((prevBreweries) => {
+      const editedBreweries = [...(prevBreweries || [])]
+      editedBreweries?.splice(index, 1)
+
+      return editedBreweries
+    })
+  }
+
+  const breweriesList: BreweryType[] = useMemo(() => {
+    console.log('updated')
+    return processData(breweries || [])
+  }, [breweries])
 
   return (
     <Layout>
@@ -75,7 +65,11 @@ function Brewery() {
               <Spinner size='xl' />
             </Flex>
           ) : (
-            <Box></Box>
+            <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+              {breweriesList?.map((brewery, index) => (
+                <Card key={brewery.id} index={index} brewery={brewery} onDelete={deleteBrewery} />
+              ))}
+            </Grid>
           )}
         </Box>
       </Box>
