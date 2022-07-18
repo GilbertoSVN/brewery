@@ -1,12 +1,29 @@
 import { Box, Button, Checkbox, Input, Text } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
+import { string } from 'yup'
 import Layout from '../components/Layout'
 
 function Login() {
   const [name, setName] = useState<string>('')
+  const [error, setError] = useState<boolean>(false)
 
-  const handleChangeName = (username: string) => {
+  const nameSchema = string()
+    .matches(/^[aA-zZ ]*$/)
+    .trim()
+    .required()
+
+  const handleChangeName = async (username: string) => {
     setName(username)
+
+    let hasError = false
+
+    try {
+      await nameSchema.validate(username, { strict: true })
+    } catch {
+      hasError = true
+    }
+
+    setError(hasError)
   }
 
   return (
@@ -24,7 +41,9 @@ function Login() {
         <Input
           marginX='auto'
           value={name}
-          onChange={(ev: ChangeEvent<HTMLInputElement>) => handleChangeName(ev.target.value)}
+          onChange={async (ev: ChangeEvent<HTMLInputElement>) =>
+            await handleChangeName(ev.target.value)
+          }
           placeholder='Full name'
           backgroundColor='white'
         />
@@ -32,7 +51,7 @@ function Login() {
           marginX='auto'
           colorScheme='blue'
           borderColor='whiteAlpha.700'
-          _empty={{ bg: "white" }}
+          _empty={{ bg: 'white' }}
         >
           Are you older than 18 years old?
         </Checkbox>
@@ -45,7 +64,7 @@ function Login() {
           }}
           backgroundColor='#5D5FEF'
           color='white'
-          isDisabled={true}
+          isDisabled={error}
         >
           Enter
         </Button>
