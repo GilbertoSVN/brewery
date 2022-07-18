@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Box, Flex, Grid, Spinner } from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import Header from '../components/Header'
@@ -10,8 +10,8 @@ function Brewery() {
   const [breweries, setBreweries] = useState<BreweryResponse[]>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
-  function processData<T>(data: BreweryResponse[]): T[] {
-    const processedData: T[] = []
+  function processData(data: BreweryResponse[]): BreweryType[] {
+    const processedData: BreweryType[] = []
 
     data.forEach((brewery) => {
       const processed = {
@@ -26,7 +26,7 @@ function Brewery() {
         type: brewery.brewery_type || '',
         custom: '',
       }
-      processedData.push(processed as T)
+      processedData.push(processed)
     })
 
     return processedData
